@@ -8,8 +8,7 @@ if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacm
 
 pacman::p_load(
   tidyverse, 
-  ape,
-  asserthat
+  ape
 )
 
 # load variational covariance matrix function taken from geoR::varcov_spatial
@@ -135,11 +134,6 @@ dimnames(spatial_covar_mat) = list(languages$Language_ID, languages$Language_ID)
 
 spatial_prec_mat = cov2precision(spatial_covar_mat)
 
-# Do Phylo and Spatial rownames match?
-if(debug_run != 1){
-x = assert_that(all(rownames(phylo_prec_mat) == rownames(spatial_covar_mat)),
-                msg = "Spatial and Phylo matrices do not align")
-}
 
 #### Set up model priors ####
 

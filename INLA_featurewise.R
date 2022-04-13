@@ -8,17 +8,9 @@ if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacm
 
 pacman::p_load(
   tidyverse, 
-  ape
+  ape,
+  asserthat
 )
-
-#for detect_coderbias.R and spatiophylogenetic_jaegermodel.R
-kappa = 2 # smoothness parameter as recommended by Dinnage et al. (2020)
-sigma = c(1, 1.15) # Sigma parameter. First value is not used. 
-
-#for waic_test.R and spatial_parameters.R
-kappa_vec = c(2, 4, 1, 2, 2)
-sigma_vec =  c(1.15, 2, 40, 10, 20)
-
 
 # load variational covariance matrix function taken from geoR::varcov_spatial
 source("varcov_spatial.R")
@@ -169,7 +161,9 @@ x = assert_that(all(rownames(phylo_prec_mat) == rownames(spatial_covar_mat)),
 
 pcprior = list(prec =list(prior="pc.prec", param = c(1, 0.1)))
 
-## Note that sigma and kappa values are set in requirements.R
+kappa = 2 # smoothness parameter as recommended by Dinnage et al. (2020)
+sigma = c(1, 1.15) # Sigma parameter. First value is not used. 
+
 
 ## Adding random effect ids
 df = data %>%

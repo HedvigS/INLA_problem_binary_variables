@@ -4,3 +4,4 @@
 .Ruserdata
 .DS_Store
 INLA_problem_binary_variables.Rproj
+*output/*

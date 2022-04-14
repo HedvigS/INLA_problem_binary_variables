@@ -4,11 +4,26 @@ if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacm
 
 pacman::p_load(
   tidyverse, 
-  missForest
+  missForest, 
+  reshape2
 )
 
 data <- read_tsv("data/Sahul_structure_wide.tsv",col_types = cols()) %>% 
   dplyr::rename(ID = glottocode) #this column is already aggregated for dialects in make_wide.R
+
+#removing non-binary traits and traits with all 0
+binary_feats <- data %>% 
+  reshape2::melt(id.vars = "ID") %>% 
+  distinct(variable, value) %>% 
+  group_by(variable) %>% 
+  summarise(sum = sum(value, na.rm = T)) %>% 
+  filter(sum == 1) %>% 
+  distinct(variable) %>% 
+  as.matrix() %>% 
+  as.vector()
+
+data <- data %>% 
+  dplyr::select(ID, all_of(binary_feats))
 
 missing_prop <- data %>% 
   dplyr::select(-ID) %>%

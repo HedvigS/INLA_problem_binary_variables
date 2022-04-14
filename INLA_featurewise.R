@@ -1,7 +1,7 @@
 #This is a script for running binomial INLA over 113 binary Grambank features, with phylo and spatial effects.
 
 #set this as 1 if you're just running this script on 50 lgs over 3 features to debug. Otherwise set to 0.
-debug_run = 0
+debug_run = 1
 
 #installing and loading packages
 if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacman") } #if pacman isn't already installed, install it.
@@ -10,6 +10,10 @@ pacman::p_load(
   tidyverse, 
   ape
 )
+
+#for detect_coderbias.R and spatiophylogenetic_jaegermodel.R
+kappa = 2 # smoothness parameter as recommended by Dinnage et al. (2020)
+sigma = c(1, 1.15) # Sigma parameter. First value is not used. 
 
 # load variational covariance matrix function taken from geoR::varcov_spatial
 source("varcov_spatial.R")
@@ -63,8 +67,13 @@ join_columns = c("2.5%", "50%", "97.5%", "Feature_ID",
 cat("#### Building Jaeger tree models ####\n")
 
 #reading in data
-data <- read_tsv("data/Sahul_structure_wide.tsv",col_types = cols()) %>% 
-  dplyr::rename(Language_ID = glottocode) #this column is already aggregated for dialects in make_wide.R
+Sahul_data_fn <- "data/Sahul_structure_wide_imputed.tsv"
+if (!file.exists(Sahul_data_fn)) {
+  source("Impute_missing_values.R")
+}
+
+data <- read_tsv(Sahul_data_fn ,col_types = cols()) %>% 
+  dplyr::rename(Language_ID = ID) #this column is already aggregated for dialects in make_wide.R
 
 #subset GB to test code for debugging
 if(debug_run == 1){

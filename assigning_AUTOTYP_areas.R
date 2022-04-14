@@ -24,7 +24,7 @@ AUTOTYP <- read_csv("https://raw.githubusercontent.com/autotyp/autotyp-data/mast
   sample_n(1) #when a language is assigned to more than one area, pick randomly.
 
 #This next bit where we find the autotyp areas of languages was written by Seán Roberts
-# We know the autotyp-area of languages in autotyp and their long lat. We don't know the autotyp area of languages in grambank. We also can't be sure that the long lat of languoids with the same glottoids in autotyp and grambank_df have the exact identical long lat. First let's make two datasets, one for autotyp languages (hence lgs where we know the area) and those that we wish to know about, the grambank ones.
+# We know the autotyp-area of languages in autotyp and their long lat. We don't know the autotyp area of languages in the dataset. We also can't be sure that the long lat of languoids with the same glottoids in autotyp and the dataset_df have the exact identical long lat. First let's make two datasets, one for autotyp languages (hence lgs where we know the area) and those that we wish to know about, the the dataset ones.
 
 lgs_with_known_area <- as.matrix(AUTOTYP[!is.na(AUTOTYP$Area),c("Longitude","Latitude")])
 rownames(lgs_with_known_area) <- AUTOTYP[!is.na(AUTOTYP$Area),]$Language_ID

@@ -1,7 +1,7 @@
-#This is a script for running binomial INLA over 113 binary Grambank features, with phylo and spatial effects.
+#This is a script for running binomial INLA over a set of linguistic features, with phylo and spatial effects.
 
 #set this as 1 if you're just running this script on 50 lgs over 3 features to debug. Otherwise set to 0.
-debug_run = 1
+debug_run = 0
 
 #installing and loading packages
 if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacman") } #if pacman isn't already installed, install it.

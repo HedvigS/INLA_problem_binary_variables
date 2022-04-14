@@ -16,7 +16,7 @@ options(tidyverse.quiet = TRUE)
 cat("Pruning the global tree from Jäger to the dataset.\n")
 
 #### Inputs ####
-#Glottolog-cldf table to have a match for all dialects to their language parent. Note that the particular dialects may differ from the dialects in GB which is why we cann't use the language table from the grambank-cldf relase
+#Glottolog-cldf table to have a match for all dialects to their language parent. Note that the particular dialects may differ from the dialects in GB which is why we cann't use the language table from the the dataset-cldf relase
 glottolog_fn <- "data/glottolog_df.tsv"
 if (!file.exists(glottolog_fn)) {
 source("make_glottolog-cldf_table.R") }
@@ -37,7 +37,7 @@ languages <- read_tsv("data/Sahul_structure_wide.tsv",col_types = cols()) %>%
 coverage = sum(languages$Language_ID %in% taxa_pairing$Language_ID) / nrow(languages) 
 cat("Tips in the global Jaeger tree  can be matched to", round(coverage, 2) * 100, "% of the langauges in the dataset.\n")
 
-#### Subset to Grambank langauges ####
+#### Subset to the dataset langauges ####
 in_tree <- jaeger_tree$tip.label %>% 
   as.data.frame() %>% 
   dplyr::rename(taxon_full = ".") %>% #making a data frame with a column representing all the tip labels, in the right order

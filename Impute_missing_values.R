@@ -11,6 +11,13 @@ pacman::p_load(
 data <- read_tsv("data/Sahul_structure_wide.tsv",col_types = cols()) %>% 
   dplyr::rename(ID = glottocode) #this column is already aggregated for dialects in make_wide.R
 
+#prune the dataset to only those that have matches in the Jäger-tree already now to make life easier
+tree_filename = 'data/jaeger_pruned.tree'
+if (!file.exists(tree_filename)) { source("pruning_jagertree.R") }		
+phylogenetic_tree = read.tree(tree_filename)
+
+data  <- data[data$ID %in% phylogenetic_tree$tip.label,]
+
 #removing non-binary traits and traits with all 0
 binary_feats <- data %>% 
   reshape2::melt(id.vars = "ID") %>% 

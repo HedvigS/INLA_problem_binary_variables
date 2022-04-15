@@ -1,5 +1,7 @@
 #This is a script for running binomial INLA over a set of linguistic features, with phylo and spatial effects.
 
+set.seed(67)
+
 #set this as 1 if you're just running this script on 50 lgs over 3 features to debug. Otherwise set to 0.
 debug_run = 0
 
@@ -71,7 +73,6 @@ Sahul_data_fn <- "data/Sahul_structure_wide_imputed.tsv"
 if (!file.exists(Sahul_data_fn)) {
   source("Impute_missing_values.R")
 }
-
 data <- read_tsv(Sahul_data_fn ,col_types = cols()) %>% 
   dplyr::rename(Language_ID = ID) #this column is already aggregated for dialects in make_wide.R
 

@@ -5,22 +5,24 @@ source("requirements.R")
 # I haven't gone through to check which libraries are loaded
 # within requirements and had already added these.
 # Can clean up later. 
-library(spdep)
-library(phytools)
-library(geiger)
-library(ape)
-library(INLA)
-library(caper)
-library(dplyr)
-library(assertthat)
-library(ggplot2)
-library(geoR)
-library(ggpubr)
+suppressPackageStartupMessages({
+  library(spdep)
+  library(phytools)
+  library(geiger)
+  library(ape)
+  library(INLA)
+  library(caper)
+  library(dplyr)
+  library(ggplot2)
+  library(geoR)
+})
 
 ## Parameters
 args = commandArgs(trailingOnly=TRUE)
 
-lambda = args[1]
+lambda = as.numeric(args[1])
+
+cat("Testing Lambda =", lambda, "\n")
 
 ## functions
 cov2precision = function(spatial_covar_mat){

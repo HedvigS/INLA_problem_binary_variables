@@ -48,11 +48,6 @@ grambank_metadata = read_csv("data/languages.csv") %>%
                 Latitude) %>% 
   distinct(Language_ID, .keep_all = T)
 
-pcprior_phy = list(prec = list(
-  prior="pc.prec",
-  param = c(1, 0.1)) # probability that lambda is 0.1 is 10%
-)
-
 # jager tree
 tree = read.tree('./data/jaeger_pruned.tree')
 
@@ -72,7 +67,9 @@ latitude = grambank_metadata$Latitude
 
 model_data = data.frame(longitude = longitude,
                         latitude = latitude,
-                        spat_id_int = 1:nrow(grambank_metadata),
+                        phy_id_int = 1:nrow(grambank_metadata),
+                        phy_id2_int = 1:nrow(grambank_metadata),
+                        spat_id_int =  1:nrow(grambank_metadata),
                         spat_id2_int = 1:nrow(grambank_metadata),
                         glottocodes = grambank_metadata$Language_ID,
                         glottocodes2 = grambank_metadata$Language_ID)
@@ -83,7 +80,7 @@ cat("Calculating the spatial variance covariance matrix.\n")
 ## Ensure the order of languages matches the order within the phylogeny
 spatial_covar_mat = varcov.spatial(model_data[,c("longitude", "latitude")], 
                                    cov.pars = sigma, kappa = kappa)$varcov
-dimnames(spatial_covar_mat) = list(model_data$glottocodes, model_data$glottocodes)
+dimnames(spatial_covar_mat) = list(model_data$Language_ID, model_data$Language_ID)
 spatial_prec_mat = cov2precision(spatial_covar_mat)
 
 output_list = list()
@@ -108,12 +105,12 @@ for(i in 1:iter){
   
   print("INLA...")
   lambda_model = inla(formula = y ~
-                           f(spat_id_int,
+                           f(phy_id_int,
                              model = "generic0",
                              Cmatrix = spatial_prec_mat,
                              constr = TRUE,
                              hyper = pcprior_phy) +
-                           f(spat_id2_int,
+                           f(phy_id2_int,
                              model = "iid",
                              hyper = pcprior_phy,
                              constr = TRUE),

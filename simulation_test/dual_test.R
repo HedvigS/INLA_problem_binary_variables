@@ -14,8 +14,10 @@ library(caper)
 library(dplyr)
 library(assertthat)
 library(ggplot2)
-library(geoR)
 library(ggpubr)
+
+# load variational covariance matrix function taken from geoR::varcov_spatial
+source("varcov_spatial.R")
 
 ## Parameters
 args = commandArgs(trailingOnly=TRUE)

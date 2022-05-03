@@ -6,9 +6,12 @@ source("requirements.R")
 source("varcov_spatial.R")
 
 ## Parameters
+if(CLI == "Yes") {
 args = commandArgs(trailingOnly=TRUE)
 
-lambda = args[1]
+lambda = args[1] }
+
+cat("Testing Lambda =", lambda, " with the single geo test.\n")
 
 ## functions
 cov2precision = function(spatial_covar_mat){
@@ -29,7 +32,7 @@ get_lambda_inla = function(fit, effect){
 }
 
 # grambank metadata
-grambank_metadata = read_csv("data/languages.csv") %>%		
+grambank_metadata = read_csv("data/simuation_test/languages.csv") %>%		
   dplyr::select(Language_ID = Language_level_ID, 
                 Name, 
                 Longitude, 
@@ -42,7 +45,7 @@ pcprior_phy = list(prec = list(
 )
 
 # jager tree
-tree = read.tree('./data/jaeger_pruned.tree')
+tree = read.tree('./data/simuation_test/jaeger_pruned.tree')
 
 ## Subset grambank to all of those in Jager tree
 keep_languages = grambank_metadata$Language_ID %in% tree$tip.label
@@ -140,6 +143,6 @@ for(i in 1:iter){
 
 saveRDS(output_list, file = 
           paste0(
-            "temp_scripts_for_meetings/spatial",
+            "output/simulation_test/spatial",
             lambda,
             "_simulation.RDS"))

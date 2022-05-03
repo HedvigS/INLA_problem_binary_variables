@@ -2,20 +2,6 @@
 ## Binomial INLA test
 source("requirements.R")
 
-# I haven't gone through to check which libraries are loaded
-# within requirements and had already added these.
-# Can clean up later. 
-library(spdep)
-library(phytools)
-library(geiger)
-library(ape)
-library(INLA)
-library(caper)
-library(dplyr)
-library(assertthat)
-library(ggplot2)
-library(ggpubr)
-
 # load variational covariance matrix function taken from geoR::varcov_spatial
 source("varcov_spatial.R")
 

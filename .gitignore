@@ -6,3 +6,4 @@
 INLA_problem_binary_variables.Rproj
 *output/*
 data/Sahul_structure_wide_imputed.tsv
+*.RDS

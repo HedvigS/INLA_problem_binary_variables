@@ -71,6 +71,7 @@ pacman::p_load(
 	ape,
 	phytools,
 	caper, 
+  geiger,
   synchrony,
 
 	# testing

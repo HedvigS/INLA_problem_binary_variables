@@ -5,7 +5,8 @@ lambda_strong = 0.8
 lambda_medium = 0.5
 lambda_weak = 0.2
 
-CLI <- "no"
+CLI <- "no" #set to "Yes" if you want it
+brms <- "no" #set to "Yes" if you want it
 
 if(CLI == "Yes") {
 command1 = paste0("RScript simulation_test/single_lambda_test.R ", lambda_strong)

@@ -82,7 +82,9 @@ pcprior_phy = list(prec = list(
 output_list = list()
 iter = 20
 for(i in 1:iter){
-  print(i)
+
+  cat("I'm on iteration", i, "out of", iter, ". This is with lambda =", lambda, "\n.")
+  
   y = rTraitDisc(
     geiger::rescale(tree,
             lambda,
@@ -117,6 +119,7 @@ for(i in 1:iter){
                control.mode(theta = c(2.02, 1.819)),
                          data = model_data)
   
+  if(brms != "no"){
   print("brms...")
   brms_model <- brm(
     y ~ 1 + (1|gr(glottocodes, cov = A)) + (1|glottocodes2), 
@@ -128,7 +131,7 @@ for(i in 1:iter){
       prior(student_t(3, 0, 20), "sd")
     ),
     chains = 1
-  )
+  ) }
   
   print("Phylo D...")
   phylo_d_results = phylo.d(data = model_data,
@@ -136,11 +139,22 @@ for(i in 1:iter){
                               phy = tree,
                               binvar = y)
   
-  output_list[[i]] = list(y = y,
+
+  
+  if(brms != "no"){
+    output_list[[i]] = list(y = y,
                           pagels_lambda = pagels_lambda,
                           inla_model = lambda_model,
                           brms_model = brms_model,
-                          phylo_d = phylo_d_results)
+                          phylo_d = phylo_d_results) }else{
+                            
+                            output_list[[i]] = list(y = y,
+                                                    pagels_lambda = pagels_lambda,
+                                                    inla_model = lambda_model,
+                                                    phylo_d = phylo_d_results)       
+                            
+                            }
+  
 }
 
 saveRDS(output_list, file = 

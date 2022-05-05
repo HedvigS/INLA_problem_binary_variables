@@ -43,7 +43,8 @@ get_lambda_inla = function(fit, effect){
 }
 
 # grambank metadata
-grambank_metadata = read_csv("data/languages.csv") %>%		
+grambank_metadata = read_csv("data/languages.csv",
+                             col_types = cols()) %>%		
   dplyr::select(Language_ID = Language_level_ID, 
                 Name, 
                 Longitude, 

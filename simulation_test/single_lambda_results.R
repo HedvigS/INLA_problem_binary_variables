@@ -68,7 +68,7 @@ plot_df = data.frame(pagels_lambda = pagels_lambda_estimate,
 plot_df = plot_df[order(plot_df$pagels_lambda),]
 present = sapply(output, function(x) table(x$y)["1"])
 
-plot_long = reshape::melt(plot_df)
+plot_long = reshape2::melt(plot_df)
 plot_long$id = rep(1:20, times = 4)
 plot_long$present = rep(present, each = 4)
 

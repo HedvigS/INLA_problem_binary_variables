@@ -43,14 +43,17 @@ if(CLI == "Yes") {
   lambda <- lambda_strong
   source("simulation_test/single_lambda_test.R")
   source("simulation_test/single_geography_test.R")
-  
+  source("simulation_test/dual_test.R")
+    
   lambda <- lambda_medium
   source("simulation_test/single_lambda_test.R")
   source("simulation_test/single_geography_test.R")
+  source("simulation_test/dual_test.R")
   
   lambda <- lambda_weak
   source("simulation_test/single_lambda_test.R")
   source("simulation_test/single_geography_test.R")
+  source("simulation_test/dual_test.R")
   
   sink(file = NULL)
   

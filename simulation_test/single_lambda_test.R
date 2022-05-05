@@ -7,13 +7,11 @@ source("varcov_spatial.R")
 
 ## Parameters
 if(CLI == "Yes") {
-
-args = commandArgs(trailingOnly=TRUE)
-
-lambda = as.numeric(args[1])
+  args = commandArgs(trailingOnly=TRUE)
+  lambda = as.numeric(args[1])
 }
 
-cat("Testing Lambda =", lambda, " with the single Pagel's Lambda.\n")
+cat("Simulation for Lambda only model with Lambda =", lambda, "...\n")
 
 ## functions
 cov2precision = function(spatial_covar_mat){
@@ -34,7 +32,8 @@ get_lambda_inla = function(fit, effect){
 }
 
 # grambank metadata
-grambank_metadata = read_csv("data/simuation_test/languages.csv", col_types = cols()) %>%		
+grambank_metadata = read_csv("data/languages.csv",
+                             col_types = cols()) %>%		
   dplyr::select(Language_ID = Language_level_ID, 
                 Name, 
                 Longitude, 
@@ -83,7 +82,13 @@ output_list = list()
 iter = 20
 for(i in 1:iter){
 
-  cat("I'm on iteration", i, "out of", iter, ". This is with lambda =", lambda, "\n.")
+  cat("I'm on iteration", 
+      i, 
+      "out of", 
+      iter, 
+      ". This is with lambda =", 
+      lambda, "\n."
+      )
   
   y = rTraitDisc(
     geiger::rescale(tree,
@@ -120,18 +125,19 @@ for(i in 1:iter){
                          data = model_data)
   
   if(brms != "no"){
-  print("brms...")
-  brms_model <- brm(
-    y ~ 1 + (1|gr(glottocodes, cov = A)) + (1|glottocodes2), 
-    data = model_data, 
-    family = bernoulli(), 
-    data2 = list(A = phylo_covar_mat),
-    prior = c(
-      prior(normal(0, 50), "Intercept"),
-      prior(student_t(3, 0, 20), "sd")
-    ),
-    chains = 1
-  ) }
+    print("brms...")
+    brms_model <- brm(
+      y ~ 1 + (1|gr(glottocodes, cov = A)) + (1|glottocodes2), 
+      data = model_data, 
+      family = bernoulli(), 
+      data2 = list(A = phylo_covar_mat),
+      prior = c(
+        prior(normal(0, 50), "Intercept"),
+        prior(student_t(3, 0, 20), "sd")
+      ),
+      chains = 1
+      ) 
+  }
   
   print("Phylo D...")
   phylo_d_results = phylo.d(data = model_data,
@@ -146,15 +152,13 @@ for(i in 1:iter){
                           pagels_lambda = pagels_lambda,
                           inla_model = lambda_model,
                           brms_model = brms_model,
-                          phylo_d = phylo_d_results) }else{
-                            
-                            output_list[[i]] = list(y = y,
-                                                    pagels_lambda = pagels_lambda,
-                                                    inla_model = lambda_model,
-                                                    phylo_d = phylo_d_results)       
-                            
-                            }
-  
+                          phylo_d = phylo_d_results)
+    }else{
+    output_list[[i]] = list(y = y,
+                            pagels_lambda = pagels_lambda,
+                            inla_model = lambda_model,
+                            phylo_d = phylo_d_results)
+    }
 }
 
 saveRDS(output_list, file = 

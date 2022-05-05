@@ -4,14 +4,27 @@ source("requirements.R")
 
 # load variational covariance matrix function taken from geoR::varcov_spatial
 source("varcov_spatial.R")
+# I haven't gone through to check which libraries are loaded
+# within requirements and had already added these.
+# Can clean up later. 
+suppressPackageStartupMessages({
+  library(spdep)
+  library(phytools)
+  library(geiger)
+  library(ape)
+  library(INLA)
+  library(caper)
+  library(dplyr)
+  library(assertthat)
+  library(geoR)
+})
 
 ## Parameters
 if(CLI == "Yes") {
-args = commandArgs(trailingOnly=TRUE)
-
-lambda = args[1] }
-
-cat("Testing Lambda =", lambda, " with the single geo test.\n")
+  args = commandArgs(trailingOnly=TRUE)
+  lambda = as.numeric(args[1] )
+}
+cat("Simulation for a geography only model with Lambda =", lambda, "...\n")
 
 ## functions
 cov2precision = function(spatial_covar_mat){
@@ -32,7 +45,8 @@ get_lambda_inla = function(fit, effect){
 }
 
 # grambank metadata
-grambank_metadata = read_csv("data/simuation_test/languages.csv", col_types = cols())%>%		
+grambank_metadata = read_csv("data/languages.csv",
+                             col_types = cols()) %>%		
   dplyr::select(Language_ID = Language_level_ID, 
                 Name, 
                 Longitude, 
@@ -80,7 +94,13 @@ spatial_prec_mat = cov2precision(spatial_covar_mat)
 output_list = list()
 iter = 20
 for(i in 1:iter){
-  cat("I'm on iteration", i, "out of", iter, ". This is with lambda =", lambda, "\n.")
+  cat("I'm on iteration", 
+      i, 
+      "out of", 
+      iter, 
+      ". This is with lambda =", 
+      lambda, "\n.")
+  
   y = rTraitDisc(
     geiger::rescale(tree,
             lambda,
@@ -107,7 +127,8 @@ for(i in 1:iter){
                            f(spat_id2_int,
                              model = "iid",
                              hyper = pcprior_phy,
-                             constr = TRUE),
+                             constr = TRUE) + 
+                        ,
                          family = "binomial",
                          control.compute = list(waic=TRUE),
                          control.inla =
@@ -116,18 +137,19 @@ for(i in 1:iter){
                          data = model_data)
   
   if(brms != "no"){
-  print("brms...")
-  brms_model <- brm(
-    y ~ 1 + (1|gr(glottocodes, cov = A)) + (1|glottocodes2), 
-    data = model_data, 
-    family = bernoulli(), 
-    data2 = list(A = spatial_covar_mat),
-    prior = c(
-      prior(normal(0, 50), "Intercept"),
-      prior(student_t(3, 0, 20), "sd")
-    ),
-    chains = 1
-  ) }
+    print("brms...")
+    brms_model <- brm(
+      y ~ 1 + (1|gr(glottocodes, cov = A)) + (1|glottocodes2), 
+      data = model_data, 
+      family = bernoulli(), 
+      data2 = list(A = spatial_covar_mat),
+      prior = c(
+        prior(normal(0, 50), "Intercept"),
+        prior(student_t(3, 0, 20), "sd")
+      ),
+      chains = 1
+      ) 
+    }
   
   print("Phylo D...")
   phylo_d_results = phylo.d(data = model_data,
@@ -135,19 +157,17 @@ for(i in 1:iter){
                               phy = tree,
                               binvar = y)
   if(brms != "no"){
-  output_list[[i]] = list(y = y,
+    output_list[[i]] = list(y = y,
                           pagels_lambda = pagels_lambda,
                           inla_model = lambda_model,
                           brms_model = brms_model,
-                          phylo_d = phylo_d_results) }else{
-                            
-                            output_list[[i]] = list(y = y,
-                                                    pagels_lambda = pagels_lambda,
-                                                    inla_model = lambda_model,
-                                                    phylo_d = phylo_d_results)    
-                            
-                      
-                            }
+                          phylo_d = phylo_d_results)
+  } else {
+    output_list[[i]] = list(y = y,
+                            pagels_lambda = pagels_lambda,
+                            inla_model = lambda_model,
+                            phylo_d = phylo_d_results)    
+  }
 }
 
 saveRDS(output_list, file = 

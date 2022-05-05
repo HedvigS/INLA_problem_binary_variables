@@ -30,6 +30,4 @@ suppressPackageStartupMessages(
   library(INLA, quietly = T, warn.conflicts = F, verbose = F)
 )
 
-
-
-
+inla.setOption(inla.mode="experimental") 

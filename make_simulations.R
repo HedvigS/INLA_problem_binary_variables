@@ -9,6 +9,8 @@ command3 = paste0("RScript dual_test.R ", lambda_strong)
 
 system(command1)
 system(command2)
+system(command3)
+
 
 ## Medium Signal
 lambda_medium = 0.5

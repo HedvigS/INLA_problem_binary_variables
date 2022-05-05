@@ -20,7 +20,9 @@ suppressPackageStartupMessages({
 ## Parameters
 args = commandArgs(trailingOnly=TRUE)
 
-lambda = args[1]
+lambda = as.numeric(args[1])
+
+cat("Simulation for Lambda =", lambda, "...\n")
 
 ## functions
 cov2precision = function(spatial_covar_mat){

@@ -4,20 +4,6 @@ source("requirements.R")
 
 # load variational covariance matrix function taken from geoR::varcov_spatial
 source("varcov_spatial.R")
-# I haven't gone through to check which libraries are loaded
-# within requirements and had already added these.
-# Can clean up later. 
-suppressPackageStartupMessages({
-  library(spdep)
-  library(phytools)
-  library(geiger)
-  library(ape)
-  library(INLA)
-  library(caper)
-  library(dplyr)
-  library(assertthat)
-  library(geoR)
-})
 
 ## Parameters
 if(CLI == "Yes") {

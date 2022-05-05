@@ -11,21 +11,24 @@ system(command1)
 system(command2)
 system(command3)
 
-
 ## Medium Signal
 lambda_medium = 0.5
 
-command3 = paste0("RScript single_lambda_test.R ", lambda_medium)
-command4 = paste0("RScript single_geography_test.R ", lambda_medium)
+command4 = paste0("RScript single_lambda_test.R ", lambda_medium)
+command5 = paste0("RScript single_geography_test.R ", lambda_medium)
+command6 = paste0("RScript dual_test.R ", lambda_medium)
 
 system(command4)
 system(command5)
+system(command6)
 
 ## Weak Signal
 lambda_weak = 0.2
 
 command7 = paste0("RScript single_lambda_test.R ", lambda_weak)
 command8 = paste0("RScript single_geography_test.R ", lambda_weak)
+command9 = paste0("RScript dual_test.R ", lambda_weak)
 
-system(command3)
-system(command4)
+system(command7)
+system(command8)
+system(command9)

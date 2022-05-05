@@ -22,7 +22,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 lambda = as.numeric(args[1])
 
-cat("Simulation for Lambda =", lambda, "...\n")
+cat("Simulation for Lambda only model with Lambda =", lambda, "...\n")
 
 ## functions
 cov2precision = function(spatial_covar_mat){

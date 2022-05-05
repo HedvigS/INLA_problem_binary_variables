@@ -5,6 +5,7 @@ lambda_strong = 0.8
 
 command1 = paste0("RScript single_lambda_test.R ", lambda_strong)
 command2 = paste0("RScript single_geography_test.R ", lambda_strong)
+command3 = paste0("RScript dual_test.R ", lambda_strong)
 
 system(command1)
 system(command2)

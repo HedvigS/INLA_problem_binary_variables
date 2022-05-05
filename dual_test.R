@@ -5,17 +5,17 @@ source("requirements.R")
 # I haven't gone through to check which libraries are loaded
 # within requirements and had already added these.
 # Can clean up later. 
-library(spdep)
-library(phytools)
-library(geiger)
-library(ape)
-library(INLA)
-library(caper)
-library(dplyr)
-library(assertthat)
-library(ggplot2)
-library(geoR)
-library(ggpubr)
+suppressPackageStartupMessages({
+  library(spdep)
+  library(phytools)
+  library(geiger)
+  library(ape)
+  library(INLA)
+  library(caper)
+  library(dplyr)
+  library(assertthat)
+  library(geoR)
+})
 
 ## Parameters
 args = commandArgs(trailingOnly=TRUE)
@@ -68,11 +68,11 @@ latitude = grambank_metadata$Latitude
 model_data = data.frame(longitude = longitude,
                         latitude = latitude,
                         phy_id_int = 1:nrow(grambank_metadata),
-                        phy_id2_int = 1:nrow(grambank_metadata),
                         spat_id_int =  1:nrow(grambank_metadata),
-                        spat_id2_int = 1:nrow(grambank_metadata),
-                        glottocodes = grambank_metadata$Language_ID,
-                        glottocodes2 = grambank_metadata$Language_ID)
+                        error_int = 1:nrow(grambank_metadata),
+                        glottocodes1 = grambank_metadata$Language_ID,
+                        glottocodes2 = grambank_metadata$Language_ID,
+                        glottocodes3 = grambank_metadata$Language_ID)
 
 ## Make matrices
 #### Spatial matrix
@@ -80,8 +80,18 @@ cat("Calculating the spatial variance covariance matrix.\n")
 ## Ensure the order of languages matches the order within the phylogeny
 spatial_covar_mat = varcov.spatial(model_data[,c("longitude", "latitude")], 
                                    cov.pars = sigma, kappa = kappa)$varcov
-dimnames(spatial_covar_mat) = list(model_data$Language_ID, model_data$Language_ID)
+dimnames(spatial_covar_mat) = list(model_data$glottocodes, model_data$glottocodes)
 spatial_prec_mat = cov2precision(spatial_covar_mat)
+
+## Make Phylogenetic matrix
+phylo_covar_mat <- ape::vcv(tree)
+phylo_prec_mat = cov2precision(phylo_covar_mat)
+
+# Priors
+pcprior_phy = list(prec = list(
+  prior="pc.prec",
+  param = c(1, 0.1)) # probability that lambda is 0.1 is 10%
+)
 
 output_list = list()
 iter = 20
@@ -104,29 +114,33 @@ for(i in 1:iter){
                               transform = "lambda")
   
   print("INLA...")
-  lambda_model = inla(formula = y ~
-                           f(phy_id_int,
-                             model = "generic0",
-                             Cmatrix = spatial_prec_mat,
-                             constr = TRUE,
-                             hyper = pcprior_phy) +
-                           f(phy_id2_int,
-                             model = "iid",
-                             hyper = pcprior_phy,
-                             constr = TRUE),
-                         family = "binomial",
-                         control.compute = list(waic=TRUE),
-                         control.inla =
-                           list(tolerance = 1e-6, h = 0.001),
-               control.mode(theta = c(2.02, 1.819)),
-                         data = model_data)
+  inla_model = inla(y ~ 
+         f(phy_id_int,
+           model = "generic0",
+           Cmatrix = phylo_prec_mat,
+           constr = TRUE,
+           hyper = pcprior_phy) + 
+         f(spat_id_int,
+           model = "generic0",
+           Cmatrix = spatial_prec_mat,
+           constr = TRUE,
+           hyper = pcprior_phy) +
+         f(error_int,
+           model = "iid",
+           constr = TRUE,
+           hyper = pcprior_phy) , 
+       data = model_data)
   
   print("brms...")
   brms_model <- brm(
-    y ~ 1 + (1|gr(glottocodes, cov = A)) + (1|glottocodes2), 
+    y ~ 1 + 
+      (1|gr(glottocodes1, cov = spatial)) + 
+      (1|gr(glottocodes2, cov = phylogeny)) + 
+      (1|glottocodes3), 
     data = model_data, 
     family = bernoulli(), 
-    data2 = list(A = spatial_covar_mat),
+    data2 = list(spatial = spatial_covar_mat,
+                 phylogeny = phylo_covar_mat),
     prior = c(
       prior(normal(0, 50), "Intercept"),
       prior(student_t(3, 0, 20), "sd")

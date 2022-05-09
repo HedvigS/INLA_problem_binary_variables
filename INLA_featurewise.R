@@ -210,19 +210,17 @@ cat("Starting INLA phylo-only featurewise runs at", as.character(Sys.time()), ".
 
 for(feature in features){
   
-  #feature <- features[77]
+  #feature <- features[15]
   
-  
-  
+  index <- index + 1   
   cat(paste0("# Running the phylo-only model on feature ", 
              feature, 
              ". That means I'm ", 
              round(index/length(features) * 100, 
                    2), 
-             "% done.\n"))
+             "% done.Feature ", feature, " has index", index, ".\n"))
   
-  index <- index + 1 
-  
+
   if(feature %in% colnames(df)){
   
   cat("Feature is in df, progressing..\n")
@@ -247,29 +245,50 @@ for(feature in features){
   
   if (class(output) != "try-error") {
   
+    cat("I've finished running inla for feature ", feature, ", writing RDS now and extracting effects.\n")
 suppressWarnings(  saveRDS(output, file = paste0(OUTPUTDIR, "phylo_only/phylo_only_", feature, ".rdata")) )
 #Don't be alarmed by the suppress warnings. saveRDS() is being kind and reminding us that the package stats may not be available when loading. However, this is not a necessary warning for us so we've wrapped saveRDS in suppressWarnings.
+
+#pulling out phy_id_generic effect
+#if the hessian has negative eigenvalues, then the hyperpar will contain inf values and the extract won't work, therefore there's an if statement testing for this.
+
+if(!(Inf %in% output$marginals.hyperpar$`Precision for phy_id_generic`[,2])){
 
 phylo_effect_generic = inla.tmarginal(function(x) 1/sqrt(x),
                                 output$marginals.hyperpar$`Precision for phy_id_generic`,
                                 method = "linear") %>%
     inla.qmarginal(c(0.025, 0.5, 0.975), .)
 
-phylo_effect_iid_model = inla.tmarginal(function(x) 1/sqrt(x),
-                                        output$marginals.hyperpar$`Precision for phy_id_iid_model`,
-                                        method = "linear") %>%
-    inla.qmarginal(c(0.025, 0.5, 0.975), .)
-  
 df_phylo_only_generic  <- phylo_effect_generic %>% 
-    as.data.frame() %>% 
-    t() %>% 
-    as.data.frame() %>% 
-    rename("2.5%" = V1, "50%" = V2, "97.5%" = V3) %>% 
+  as.data.frame() %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  rename("2.5%" = V1, "50%" = V2, "97.5%" = V3) %>% 
+  mutate(Feature_ID = feature) %>% 
+  mutate(effect = "phylo_only_generic") %>% 
+  mutate(model = "phylo_only") %>% 
+  mutate(waic = output$waic$waic)  %>% 
+  mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
+}else{
+  df_phylo_only_generic <- data.frame(
+    "2.5%" = NULL,
+    "50%" =NULL,
+    "97.5%" =NULL,  
+    marginals.hyperpar.phy_id_generic = NULL) %>% 
     mutate(Feature_ID = feature) %>% 
     mutate(effect = "phylo_only_generic") %>% 
     mutate(model = "phylo_only") %>% 
-    mutate(waic = output$waic$waic)  %>% 
-    mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
+    mutate(waic = output$waic$waic)  
+}
+
+#pulling out phy_id_iid_model effect
+#if the hessian has negative eigenvalues, then the hyperpar will contain inf values and the extract won't work, therefore there's an if statement testing for this.
+
+if(!(Inf %in% output$marginals.hyperpar$`Precision for phy_id_iid_model`[,2])){
+phylo_effect_iid_model = inla.tmarginal(function(x) 1/sqrt(x),
+                                        output$marginals.hyperpar$`Precision for phy_id_iid_model`,
+                                        method = "linear") %>%
+    inla.qmarginal(c(0.025, 0.5, 0.975), .) 
 
 df_phylo_only_iid_model <- phylo_effect_iid_model %>% 
   as.data.frame() %>% 
@@ -281,6 +300,19 @@ df_phylo_only_iid_model <- phylo_effect_iid_model %>%
   mutate(model = "phylo_only") %>% 
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
+} else{
+  df_phylo_only_iid_model<- data.frame(
+    "2.5%" = NULL,
+    "50%" =NULL,
+    "97.5%" =NULL,  
+    marginals.hyperpar.phy_id_generic = NULL) %>% 
+    mutate(Feature_ID = feature) %>% 
+    mutate(effect = "phylo_only_iid_model") %>% 
+    mutate(model = "phylo_only") %>% 
+    mutate(waic = output$waic$waic)  
+}
+
+
 
 df_phylo_only <- df_phylo_only  %>% 
   full_join(df_phylo_only_iid_model, 

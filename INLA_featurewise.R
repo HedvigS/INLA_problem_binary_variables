@@ -225,7 +225,7 @@ for(feature in features){
   
   if(feature %in% colnames(df)){
   
-  
+  cat("Feature is in df, progressing..\n")
   formula <- eval(substitute(this_feature ~
                                f((phy_id_generic), 
                                  model = "generic0",
@@ -298,6 +298,5 @@ cat("All done with the phylo only model, 100% done!")
 
 df_phylo_only %>% write_tsv(file = file.path(OUTPUTDIR, "df_phylo_only.tsv"))
 df_phylo_only %>% saveRDS(file = file.path(OUTPUTDIR, "df_phylo_only.Rdata"))
-
 
 sink(file = NULL)

@@ -6,12 +6,7 @@ set.seed(67)
 debug_run = 0
 
 #installing and loading packages
-if (!suppressPackageStartupMessages(require("pacman"))) { install.packages("pacman") } #if pacman isn't already installed, install it.
-
-pacman::p_load(
-  tidyverse, 
-  ape
-)
+source("requirements.R")
 
 #for detect_coderbias.R and spatiophylogenetic_jaegermodel.R
 kappa = 2 # smoothness parameter as recommended by Dinnage et al. (2020)
@@ -228,22 +223,26 @@ for(feature in features){
   
   index <- index + 1 
   
+  if(feature %in% colnames(df)){
+  
+  
+  formula <- eval(substitute(this_feature ~
+                               f((phy_id_generic), 
+                                 model = "generic0",
+                                 Cmatrix = phylo_prec_mat,
+                                 constr = TRUE, 
+                                 hyper = pcprior) + 
+                               f(phy_id_iid_model,
+                                 model = "iid", 
+                                 hyper = pcprior), list(this_feature=as.name(feature))))
+  
   output <- try(expr = {
-    eval(substitute(inla(formula = this_feature ~
-                                   f((phy_id_generic), 
-                                     model = "generic0",
-                                     Cmatrix = phylo_prec_mat,
-                                     constr = TRUE, 
-                                     hyper = pcprior) + 
-                                   f(phy_id_iid_model,
-                                     model = "iid", 
-                                     hyper = pcprior),
+    inla(formula = formula,
                                  control.compute = list(waic=TRUE, dic = FALSE, mlik = FALSE, config = TRUE),
                                  control.inla = list(tolerance = 1e-6, h = 0.001),
                                  control.predictor = list(compute=TRUE, link=1), 
                                  control.family = list(control.link=list(model="logit")),  
-                                 data = df,family = "binomial"),
-                            list(this_feature=as.name(feature))))})
+                                 data = df,family = "binomial")})
 
   
   if (class(output) != "try-error") {
@@ -289,6 +288,9 @@ df_phylo_only <- df_phylo_only  %>%
   full_join(df_phylo_only_generic, 
             by = c(join_columns, "marginals.hyperpar.phy_id_generic"))
 
+  }
+  }else{
+    cat("Feature", feature, "wasn't in the dataframe. Moving on.")
   }
 rm(output)  
 }

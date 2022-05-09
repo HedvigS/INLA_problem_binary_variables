@@ -259,7 +259,7 @@ phylo_effect_generic = try(expr = {inla.tmarginal(function(x) 1/x,
     inla.qmarginal(c(0.025, 0.5, 0.975), .)}
 )
 
-if (class(output) != "try-error") {
+if (class(phylo_effect_generic) != "try-error") {
 df_phylo_only_generic  <- phylo_effect_generic %>% 
   as.data.frame() %>% 
   t() %>% 
@@ -271,8 +271,10 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
 } else{
-  cat("Couldn't extract phy generic effect from feature ", feature, ", making empty df.\n")
-  df_phylo_only_generic <- tibble(
+  
+  cat(paste0("Couldn't extract phy generic effect from feature ", feature, ", making empty df.\n"))
+
+    df_phylo_only_generic <- tibble(
     "2.5%" = c(NA),
     "50%" =c(NA),
     "97.5%" =c(NA)) %>% 
@@ -294,7 +296,7 @@ phylo_effect_iid_model = try(expr = {
     inla.qmarginal(c(0.025, 0.5, 0.975), .) }
 )
 
-if (class(output) != "try-error") {
+if (class(phylo_effect_iid_model) != "try-error") {
   df_phylo_only_iid_model <- phylo_effect_iid_model %>% 
   as.data.frame() %>% 
   t() %>% 
@@ -306,7 +308,7 @@ if (class(output) != "try-error") {
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2]) } else{
 
-    cat("Couldn't extract phy iid effect from feature ", feature, ", making empty df.\n")
+    cat(paste0("Couldn't extract phy iid effect from feature ", feature, ", making empty df.\n"))
 
 df_phylo_only_iid_model<- tibble(
     "2.5%" = c(NA),
@@ -318,7 +320,6 @@ df_phylo_only_iid_model<- tibble(
     mutate(waic = output$waic$waic)  %>% 
     mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
   }
-
 
 df_phylo_only <- df_phylo_only  %>% 
   full_join(df_phylo_only_iid_model, 

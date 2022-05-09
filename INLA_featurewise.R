@@ -271,9 +271,9 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
   mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
 }else{
   df_phylo_only_generic <- tibble(
-    "2.5%" = c("NEGATIVE HESSIAN"),
-    "50%" =c("NEGATIVE HESSIAN"),
-    "97.5%" =c("NEGATIVE HESSIAN")) %>% 
+    "2.5%" = c(NA),
+    "50%" =c(NA),
+    "97.5%" =c(NA)) %>% 
     mutate(Feature_ID = feature) %>% 
     mutate(effect = "phylo_only_generic") %>% 
     mutate(model = "phylo_only") %>% 
@@ -302,9 +302,9 @@ df_phylo_only_iid_model <- phylo_effect_iid_model %>%
   mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
 } else{
   df_phylo_only_iid_model<- tibble(
-    "2.5%" = c("NEGATIVE HESSIAN"),
-    "50%" =c("NEGATIVE HESSIAN"),
-    "97.5%" =c("NEGATIVE HESSIAN")) %>%  
+    "2.5%" = c(NA),
+    "50%" =c(NA),
+    "97.5%" =c(NA)) %>%  
     mutate(Feature_ID = feature) %>% 
     mutate(effect = "phylo_only_iid_model") %>% 
     mutate(model = "phylo_only") %>% 

@@ -176,9 +176,9 @@ alco1235	Mesoamerica	-98.3969	17.3687
 aleg1238	African Savannah	9.00394	6.59423
 alek1238	Interior New Guinea	145.387	-6.03901
 aleu1260	N Coast Asia	-174.29	52.1228
-alge1235	Europe	3.5462	36.4762
+alge1235	N Africa	3.5462	36.4762
 alge1239	N Africa	3.23033	35.4208
-alge1240	N Africa	4.80626	20.8884
+alge1240	African Savannah	4.80626	20.8884
 algh1238	Europe	8.32867	40.56432
 algo1255	E North America	-77.5258	47.3876
 alii1240	S Africa	18.0352	4.60014
@@ -1243,7 +1243,7 @@ cara1270	African Savannah	8.74567	10.1281
 cara1271	Andean	-75.877	5.624
 cara1272	NE South America	-69.6465	0.06168
 cara1273	NE South America	-64.232247	-6.948358
-cari1274	Europe	28.182	37.203
+cari1274	Greater Mesopotamia	28.182	37.203
 cari1275	NE South America	-55.333168	5.722918
 cari1276	NE South America	-54.6305	5.62695
 cari1279	NE South America	-72.0664	1.21894
@@ -1335,7 +1335,7 @@ chac1251	NE South America	-66.7164	-12.133
 chad1238	African Savannah	15.2481	12.1115
 chad1240	Southeast Asia	109.96041	25.23532
 chad1249	African Savannah	13.5	14.67
-chag1247	Inner Asia	57.88758	38.21146
+chag1247	Greater Mesopotamia	57.88758	38.21146
 chai1253	NE South America	-63.1034	9.21256
 chai1254	Southeast Asia	93.866431	24.30438
 chak1266	Southeast Asia	92.339	23.00148
@@ -1381,7 +1381,7 @@ chek1238	Oceania	159.625	-8.27055
 chem1251	California	-116.438436	35.356093
 chen1255	Indic	79.2534	15.8787
 chen1259	N Coast New Guinea	142.317	-4.25154
-chen1266	Europe	2.1989899999999998	36.5917
+chen1266	N Africa	2.1989899999999998	36.5917
 chen1267	Southeast Asia	103.970947	30.605768
 chep1243	Southeast Asia	101.7501	22.1749
 chep1245	Indic	84.9017	27.7206
@@ -1721,7 +1721,7 @@ dhao1237	Oceania	122.658	-10.8098
 dhar1247	S Australia	114.847	-24.0601
 dhar1248	S Australia	150.593	-23.307
 dhat1238	Indic	70.7826	26.4156
-dhim1246	Southeast Asia	88.3798	26.6283
+dhim1246	Indic	88.3798	26.6283
 dhiv1236	Southeast Asia	73.54433	1.928498
 dhod1238	Indic	73.2743	21.0656
 dhof1235	Greater Mesopotamia	54.4894	17.0796
@@ -4071,7 +4071,7 @@ libi1244	S Africa	18.8886	1.97729
 libi1250	Greater Abyssinia	38.4997	8.09761
 libo1242	Oceania	123.5	13.17
 liby1235	N Africa	17.573	29.512
-liby1240	N Africa	15.0014	22.0032
+liby1240	African Savannah	15.0014	22.0032
 ligb1244	African Savannah	-2.56353	7.94291
 lige1238	S Africa	22.4936	2.86168
 ligu1248	Europe	7.90522	44.0816
@@ -4627,7 +4627,7 @@ maya1280	N Australia	140.337	-18.1147
 maya1281	African Savannah	-2.72732	13.1811
 maya1282	N Coast New Guinea	130.909	-1.22329
 maya1285	Mesoamerica	-84.3439	14.1259
-maye1238	S Africa	24	4
+maye1238	African Savannah	24	4
 mayi1234	N Australia	140.63	-20
 mayi1235	N Australia	140.61	-19.25
 mayi1236	N Australia	141.46	-18.56
@@ -5830,7 +5830,7 @@ onto1237	Oceania	159.701	-5.49029
 ooku1235	S New Guinea	149.100566	-10.13509
 oorl1238	S Africa	23.01446	-28.38447
 opao1240	S New Guinea	145.751	-7.85988
-opat1246	Basin and Plains	-110.06212	31.15211
+opat1246	Mesoamerica	-110.06212	31.15211
 opon1234	NE South America	-74.084846	6.473146
 opuu1239	Greater Abyssinia	33.853	8.47526
 oran1258	Southeast Asia	104.008	1.88296
@@ -6997,7 +6997,7 @@ sout2689	Southeast Asia	93.8042	6.82744
 sout2692	Southeast Asia	107.65424	12.06354
 sout2694	Inner Asia	86.8705	50.1347
 sout2697	Greater Mesopotamia	48.4302	36.5137
-sout2699	Indic	60.6907	36.6099
+sout2699	Greater Mesopotamia	60.6907	36.6099
 sout2711	Indic	80.27811	20.10446
 sout2715	Indic	84.8511	28.106
 sout2718	Indic	84.9036	27.5722
@@ -7246,7 +7246,7 @@ tagi1240	Alaska-Oregon	-134.799	60.242
 tagi1241	Indic	94.221711	27.986064
 tago1246	African Savannah	30.9306	12.0346
 tagw1240	African Savannah	-5.17372	8.67053
-taha1241	N Africa	8.73169	22.5908
+taha1241	African Savannah	8.73169	22.5908
 tahi1242	Oceania	-149.45	-17.6485
 tahl1239	Alaska-Oregon	-130.052	58.4498
 taia1239	N Coast New Guinea	144.506	-4.05047
@@ -7533,7 +7533,7 @@ tiag1235	African Savannah	-4.62352	5.28022
 tial1239	Oceania	166.842	-15.2334
 tian1237	N Coast New Guinea	150.935	-2.95505
 tian1238	Southeast Asia	117.215424	39.186072
-tibe1272	Indic	90.1872	28.3681
+tibe1272	Inner Asia	90.1872	28.3681
 tibe1274	African Savannah	11.3103	5.30535
 tibe1277	Inner Asia	91.157981	29.651803
 tich1238	Indic	83.4672	28.9506
@@ -7616,7 +7616,7 @@ tofa1246	N Coast New Guinea	140.591	-3.74322
 tofi1235	African Savannah	2.43226	6.51774
 togb1241	African Savannah	22.7362	6.35815
 togo1252	African Savannah	25.9756	8.6629
-toho1245	Basin and Plains	-111.995	31.7973
+toho1245	Mesoamerica	-111.995	31.7973
 tojo1241	Mesoamerica	-91.7825	16.2572
 toka1244	Interior New Guinea	145.298	-6.05047
 toke1240	Oceania	-171.780833	-9.227642
@@ -7787,9 +7787,9 @@ tura1265	S New Guinea	149.567	-9.83576
 turi1246	Indic	84.4712	22.0122
 turi1247	NE South America	-49.5	-2
 turk1244	African Savannah	18.436889999999998	9.09034
-turk1288	Europe	28.85551	41.02675
+turk1288	Greater Mesopotamia	28.85551	41.02675
 turk1303	Greater Mesopotamia	50.32223	34.42237
-turk1304	Indic	59.17574	37.08719
+turk1304	Greater Mesopotamia	59.17574	37.08719
 turk1306	African Savannah	-4.92082	10.7114
 turk1308	Greater Abyssinia	35.7101	4.30688
 turk1310	Mesoamerica	-71.7451	21.8078

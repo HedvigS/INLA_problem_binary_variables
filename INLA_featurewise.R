@@ -210,7 +210,7 @@ cat("Starting INLA phylo-only featurewise runs at", as.character(Sys.time()), ".
 
 for(feature in features){
   
-  #feature <- features[15]
+  #feature <- features[149]
   
   index <- index + 1   
   cat(paste0("# Running the phylo-only model on feature ", 
@@ -254,7 +254,7 @@ suppressWarnings(  saveRDS(output, file = paste0(OUTPUTDIR, "phylo_only/phylo_on
 
 if(!(Inf %in% output$marginals.hyperpar$`Precision for phy_id_generic`[,2])){
 
-phylo_effect_generic = inla.tmarginal(function(x) 1/sqrt(x),
+phylo_effect_generic = inla.tmarginal(function(x) 1/x,
                                 output$marginals.hyperpar$`Precision for phy_id_generic`,
                                 method = "linear") %>%
     inla.qmarginal(c(0.025, 0.5, 0.975), .)
@@ -285,7 +285,7 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
 #if the hessian has negative eigenvalues, then the hyperpar will contain inf values and the extract won't work, therefore there's an if statement testing for this.
 
 if(!(Inf %in% output$marginals.hyperpar$`Precision for phy_id_iid_model`[,2])){
-phylo_effect_iid_model = inla.tmarginal(function(x) 1/sqrt(x),
+phylo_effect_iid_model = inla.tmarginal(function(x) 1/x,
                                         output$marginals.hyperpar$`Precision for phy_id_iid_model`,
                                         method = "linear") %>%
     inla.qmarginal(c(0.025, 0.5, 0.975), .) 

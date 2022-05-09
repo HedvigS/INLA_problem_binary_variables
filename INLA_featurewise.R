@@ -252,13 +252,14 @@ suppressWarnings(  saveRDS(output, file = paste0(OUTPUTDIR, "phylo_only/phylo_on
 #pulling out phy_id_generic effect
 #if the hessian has negative eigenvalues, then the hyperpar will contain inf values and the extract won't work, therefore there's an if statement testing for this.
 
-if(!(Inf %in% output$marginals.hyperpar$`Precision for phy_id_generic`[,2])){
 
-phylo_effect_generic = inla.tmarginal(function(x) 1/x,
+phylo_effect_generic = try(expr = {inla.tmarginal(function(x) 1/x,
                                 output$marginals.hyperpar$`Precision for phy_id_generic`,
                                 method = "linear") %>%
-    inla.qmarginal(c(0.025, 0.5, 0.975), .)
+    inla.qmarginal(c(0.025, 0.5, 0.975), .)}
+)
 
+if (class(output) != "try-error") {
 df_phylo_only_generic  <- phylo_effect_generic %>% 
   as.data.frame() %>% 
   t() %>% 
@@ -269,7 +270,8 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
   mutate(model = "phylo_only") %>% 
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
-}else{
+} else{
+  cat("Couldn't extract phy generic effect from feature ", feature, ", making empty df.\n")
   df_phylo_only_generic <- tibble(
     "2.5%" = c(NA),
     "50%" =c(NA),
@@ -284,13 +286,16 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
 #pulling out phy_id_iid_model effect
 #if the hessian has negative eigenvalues, then the hyperpar will contain inf values and the extract won't work, therefore there's an if statement testing for this.
 
-if(!(Inf %in% output$marginals.hyperpar$`Precision for phy_id_iid_model`[,2])){
-phylo_effect_iid_model = inla.tmarginal(function(x) 1/x,
+
+phylo_effect_iid_model = try(expr = {
+  inla.tmarginal(function(x) 1/x,
                                         output$marginals.hyperpar$`Precision for phy_id_iid_model`,
                                         method = "linear") %>%
-    inla.qmarginal(c(0.025, 0.5, 0.975), .) 
+    inla.qmarginal(c(0.025, 0.5, 0.975), .) }
+)
 
-df_phylo_only_iid_model <- phylo_effect_iid_model %>% 
+if (class(output) != "try-error") {
+  df_phylo_only_iid_model <- phylo_effect_iid_model %>% 
   as.data.frame() %>% 
   t() %>% 
   as.data.frame() %>% 
@@ -299,9 +304,11 @@ df_phylo_only_iid_model <- phylo_effect_iid_model %>%
   mutate(effect = "phylo_only_iid_model") %>% 
   mutate(model = "phylo_only") %>% 
   mutate(waic = output$waic$waic)  %>% 
-  mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
-} else{
-  df_phylo_only_iid_model<- tibble(
+  mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2]) } else{
+
+    cat("Couldn't extract phy iid effect from feature ", feature, ", making empty df.\n")
+
+df_phylo_only_iid_model<- tibble(
     "2.5%" = c(NA),
     "50%" =c(NA),
     "97.5%" =c(NA)) %>%  
@@ -310,7 +317,8 @@ df_phylo_only_iid_model <- phylo_effect_iid_model %>%
     mutate(model = "phylo_only") %>% 
     mutate(waic = output$waic$waic)  %>% 
     mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
-}
+  }
+
 
 df_phylo_only <- df_phylo_only  %>% 
   full_join(df_phylo_only_iid_model, 

@@ -211,15 +211,13 @@ cat("Starting INLA phylo-only featurewise runs at", as.character(Sys.time()), ".
 for(feature in features){
   
   #feature <- features[149]
-  
   index <- index + 1   
   cat(paste0("# Running the phylo-only model on feature ", 
              feature, 
              ". This feature has index ", index, ". That means I'm ", 
-             round(index/length(features) * 100, 
+             round((index-1)/length(features) * 100, 
                    2), 
              "% done.\n"))
-  
 
   if(feature %in% colnames(df)){
   
@@ -272,8 +270,9 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
   mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
 } else{
   
-  cat(paste0("Couldn't extract phy generic effect from feature ", feature, ", making empty df.\n"))
-
+  warning(
+  paste0("Couldn't extract phy generic effect from feature ", feature, ", making empty df.\n\n")
+  )
     df_phylo_only_generic <- tibble(
     "2.5%" = c(NA),
     "50%" =c(NA),
@@ -308,7 +307,8 @@ if (class(phylo_effect_iid_model) != "try-error") {
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2]) } else{
 
-    cat(paste0("Couldn't extract phy iid effect from feature ", feature, ", making empty df.\n"))
+    warning(
+      paste0("Couldn't extract phy iid effect from feature ", feature, ", making empty df.\n.\n") )
 
 df_phylo_only_iid_model<- tibble(
     "2.5%" = c(NA),
@@ -332,6 +332,8 @@ df_phylo_only <- df_phylo_only  %>%
     cat("Feature", feature, "wasn't in the dataframe. Moving on.")
   }
 rm(output)  
+cat(paste0("Done with feature ", feature, ".
+           =============\n"))
 }
 cat("All done with the phylo only model, 100% done!")
 

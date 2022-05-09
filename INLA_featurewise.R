@@ -215,10 +215,10 @@ for(feature in features){
   index <- index + 1   
   cat(paste0("# Running the phylo-only model on feature ", 
              feature, 
-             ". That means I'm ", 
+             ". This feature has index ", index, ". That means I'm ", 
              round(index/length(features) * 100, 
                    2), 
-             "% done.Feature ", feature, " has index", index, ".\n"))
+             "% done.\n"))
   
 
   if(feature %in% colnames(df)){
@@ -270,15 +270,15 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
 }else{
-  df_phylo_only_generic <- data.frame(
-    "2.5%" = NULL,
-    "50%" =NULL,
-    "97.5%" =NULL,  
-    marginals.hyperpar.phy_id_generic = NULL) %>% 
+  df_phylo_only_generic <- tibble(
+    "2.5%" = c("NEGATIVE HESSIAN"),
+    "50%" =c("NEGATIVE HESSIAN"),
+    "97.5%" =c("NEGATIVE HESSIAN")) %>% 
     mutate(Feature_ID = feature) %>% 
     mutate(effect = "phylo_only_generic") %>% 
     mutate(model = "phylo_only") %>% 
-    mutate(waic = output$waic$waic)  
+    mutate(waic = output$waic$waic)  %>% 
+  mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
 }
 
 #pulling out phy_id_iid_model effect
@@ -301,18 +301,16 @@ df_phylo_only_iid_model <- phylo_effect_iid_model %>%
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
 } else{
-  df_phylo_only_iid_model<- data.frame(
-    "2.5%" = NULL,
-    "50%" =NULL,
-    "97.5%" =NULL,  
-    marginals.hyperpar.phy_id_generic = NULL) %>% 
+  df_phylo_only_iid_model<- tibble(
+    "2.5%" = c("NEGATIVE HESSIAN"),
+    "50%" =c("NEGATIVE HESSIAN"),
+    "97.5%" =c("NEGATIVE HESSIAN")) %>%  
     mutate(Feature_ID = feature) %>% 
     mutate(effect = "phylo_only_iid_model") %>% 
     mutate(model = "phylo_only") %>% 
-    mutate(waic = output$waic$waic)  
+    mutate(waic = output$waic$waic)  %>% 
+    mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2])
 }
-
-
 
 df_phylo_only <- df_phylo_only  %>% 
   full_join(df_phylo_only_iid_model, 

@@ -250,8 +250,7 @@ suppressWarnings(  saveRDS(output, file = paste0(OUTPUTDIR, "phylo_only/phylo_on
 #pulling out phy_id_generic effect
 #if the hessian has negative eigenvalues, then the hyperpar will contain inf values and the extract won't work, therefore there's an if statement testing for this.
 
-
-phylo_effect_generic = try(expr = {inla.tmarginal(function(x) 1/x,
+phylo_effect_generic = try(expr = {inla.tmarginal(function(x) 1/sqrt(x),
                                 output$marginals.hyperpar$`Precision for phy_id_generic`,
                                 method = "linear") %>%
     inla.qmarginal(c(0.025, 0.5, 0.975), .)}
@@ -270,9 +269,9 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
   mutate(marginals.hyperpar.phy_id_generic = output$marginals.hyperpar[1])
 } else{
   
-  warning(
-  paste0("Couldn't extract phy generic effect from feature ", feature, ", making empty df.\n\n")
-  )
+
+  cat(paste0("Couldn't extract phy generic effect from feature ", feature, ", making empty df!\n"))
+  
     df_phylo_only_generic <- tibble(
     "2.5%" = c(NA),
     "50%" =c(NA),
@@ -289,7 +288,7 @@ df_phylo_only_generic  <- phylo_effect_generic %>%
 
 
 phylo_effect_iid_model = try(expr = {
-  inla.tmarginal(function(x) 1/x,
+  inla.tmarginal(function(x) 1/sqrt(x),
                                         output$marginals.hyperpar$`Precision for phy_id_iid_model`,
                                         method = "linear") %>%
     inla.qmarginal(c(0.025, 0.5, 0.975), .) }
@@ -307,8 +306,7 @@ if (class(phylo_effect_iid_model) != "try-error") {
   mutate(waic = output$waic$waic)  %>% 
   mutate(marginals.hyperpar.phy_id_iid_model = output$marginals.hyperpar[2]) } else{
 
-    warning(
-      paste0("Couldn't extract phy iid effect from feature ", feature, ", making empty df.\n.\n") )
+    cat(paste0("Couldn't extract phy iid effect from feature ", feature, ", making empty df!\n") )
 
 df_phylo_only_iid_model<- tibble(
     "2.5%" = c(NA),

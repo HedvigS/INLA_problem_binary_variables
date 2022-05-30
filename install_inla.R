@@ -20,9 +20,11 @@ if (!rlang::is_installed("INLA")) {
   
   # 4. Install INLA using: 
   # NOTE: This is a big download
-  install.packages("INLA", repos=c(getOption("repos"), 
-                                   INLA="https://inla.r-inla-download.org/R/stable"), 
-                   dep=TRUE)
+  
+  install.packages("INLA",repos=c(getOption("repos"),INLA="https://inla.r-inla-download.org/R/testing"), dep=TRUE)
+#  install.packages("INLA", repos=c(getOption("repos"), 
+                              #     INLA="https://inla.r-inla-download.org/R/stable"), 
+                  # dep=TRUE)
   } else {
   cat("Great, INLA was already installed, loading now.\n") 
 }
